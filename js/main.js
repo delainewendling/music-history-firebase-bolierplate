@@ -3,20 +3,27 @@
 let $ = require('jquery'),
     db = require("./db-interaction"),
     templates = require("./dom-builder"),
-    login = require("./user");
-
+    login = require("./user"),
+    displayName,
+    profileImg;
+var userId,
+    userSongs = {};
 // Using the REST API
 function loadSongsToDOM() {
   console.log("Need to load some songs, Buddy");
   $(".uiContainer--wrapper").html("");
-  db.getSongs()
+  db.getSongs(userId)
   .then((songData)=>{
     //This is a temporary mutation - not being saved to firebase.
     var idArr = Object.keys(songData);
+    console.log("songData", songData);
     idArr.forEach((key)=>{
-      songData[key].id = key;
+      if(songData[key].uid) {
+        songData[key].id = key;
+        userSongs[key] = songData[key];
+      }
     });
-    templates.makeSongList(songData);
+    templates.makeSongList(userSongs);
   });
 }
 // loadSongsToDOM(); //<--Move to auth section after adding login btn
@@ -71,8 +78,21 @@ $(document).on("click", ".delete-btn", function () {
 // User login section. Should ideally be in its own module
 $("#auth-btn").click(function() {
   console.log("clicked auth");
-
+  login()
+  .then((result)=>{
+    //this will give you access to the Google API (read up on that)
+    displayName = result.user.displayName;
+    profileImg = result.user.photoURL;
+    let user = result.user;
+    userId = user.uid;
+    loadSongsToDOM();
+    loadLoginInfo();
+  });
 });
+
+function loadLoginInfo() {
+  $(".userInfo").html(`<img src="${profileImg}" class="profilePic"> <span class="userName"> ${displayName} </span>`);
+}
 //****************************************************************
 
 // Helper functions for forms stuff. Nothing related to Firebase
@@ -82,7 +102,8 @@ function buildSongObj() {
     songTitle: $("#form--title").val(),
     artist: $("#form--artist").val(),
     albumTitle: $("#form--album").val(),
-    genre: $("#form--genre").val()
+    genre: $("#form--genre").val(),
+    uid: userId
   };
   return songObj;
 }

@@ -9,10 +9,10 @@ let $ = require('jquery'),
 // DB interaction using Firebase REST API
 // ****************************************
 
-function getSongs(callback) {
+function getSongs(userId) {
   return new Promise ((resolve, reject)=>{
     $.ajax({
-      url: 'https://music-history-b5816.firebaseio.com/songs.json'
+      url: `https://music-history-b5816.firebaseio.com/songs.json?orderBy="uid"&equalTo${userId}`
     }).done(function(songData){
       resolve(songData);
     });
