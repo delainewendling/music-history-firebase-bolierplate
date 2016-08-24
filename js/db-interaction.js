@@ -10,23 +10,62 @@ let $ = require('jquery'),
 // ****************************************
 
 function getSongs(callback) {
-
+  return new Promise ((resolve, reject)=>{
+    $.ajax({
+      url: 'https://music-history-b5816.firebaseio.com/songs.json'
+    }).done(function(songData){
+      resolve(songData);
+    });
+  });
 }
 
 function addSong(songFormObj) {
-
+  return new Promise ((resolve, reject)=>{
+    $.ajax({
+      url: 'https://music-history-b5816.firebaseio.com/songs.json',
+      method: 'POST',
+      //Since we are submitting a JavaScript object we need to convert to a JSON object
+      data: JSON.stringify(songFormObj),
+      dataType: 'json'
+    }).done((songId)=>{
+      resolve(songId);
+    });
+  });
 }
 
 function deleteSong(songId) {
-
+  return new Promise ((resolve, reject)=>{
+    $.ajax({
+      url: `https://music-history-b5816.firebaseio.com/songs/${songId}.json`,
+      method: 'DELETE'
+    }).done(()=>{
+      resolve();
+    });
+  });
 }
 
 function getSong(songId) {
-
+  return new Promise ((resolve, reject)=>{
+    $.ajax({
+      url: `https://music-history-b5816.firebaseio.com/songs/${songId}.json`
+    }).done((song)=>{
+      resolve(song);
+    }).fail((error)=>{
+      reject(error);
+    });
+  }); //end of promise
 }
 
 function editSong(songFormObj, songId) {
-
+  return new Promise ((resolve, reject)=>{
+    $.ajax({
+      url: `https://music-history-b5816.firebaseio.com/songs/${songId}.json`,
+      method: "PUT",
+      data: JSON.stringify(songFormObj)
+    }).done((data)=>{
+      resolve(data);
+    });
+  }); //end of promise
 }
 
 module.exports = {
