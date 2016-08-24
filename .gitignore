@@ -1,4 +1,5 @@
 node_modules
+js/fb-getter
 .sass-cache
 .DS_Store
 dist/

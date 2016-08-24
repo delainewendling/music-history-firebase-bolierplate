@@ -19,7 +19,7 @@ function loadSongsToDOM() {
     templates.makeSongList(songData);
   });
 }
-loadSongsToDOM(); //<--Move to auth section after adding login btn
+// loadSongsToDOM(); //<--Move to auth section after adding login btn
 
 // Send newSong data to db then reload DOM with updated song data
 $(document).on("click", ".save_new_btn", function() {
@@ -69,10 +69,10 @@ $(document).on("click", ".delete-btn", function () {
 
 //***************************************************************
 // User login section. Should ideally be in its own module
-// $("#auth-btn").click(function() {
-//   console.log("clicked auth");
+$("#auth-btn").click(function() {
+  console.log("clicked auth");
 
-// });
+});
 //****************************************************************
 
 // Helper functions for forms stuff. Nothing related to Firebase
